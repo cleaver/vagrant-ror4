@@ -9,8 +9,9 @@ Vagrant.configure("2") do |config|
   config.vm.box = "opscode-ubuntu-12.04_chef-11.4.0"
   config.vm.box_url = "https://opscode-vm-bento.s3.amazonaws.com/vagrant/opscode_ubuntu-12.04_chef-11.4.0.box"
   config.ssh.forward_agent = true
-  config.vm.network "private_network", ip: "192.168.33.11"
-  config.vm.synced_folder "./data", "/vagrant_data",  :mount_options => ['dmode=777,fmode=666']
+  config.vm.network "private_network", ip: "192.168.33.10"
+  # config.vm.synced_folder "./data", "/vagrant_data",  :mount_options => ['dmode=777,fmode=666']
+  config.vm.synced_folder "./data", "/vagrant_data", type: "nfs"
   config.vm.provider "virtualbox" do |vb|
     vb.customize ["modifyvm", :id, "--memory", "1024"]
   end
@@ -19,7 +20,7 @@ Vagrant.configure("2") do |config|
     chef.cookbooks_path = ["cookbooks"]
     chef.add_recipe :apt
     chef.add_recipe 'redis'
-    chef.add_recipe 'nginx'
+    # chef.add_recipe 'nginx'
     chef.add_recipe 'ruby_build'
     chef.add_recipe 'rbenv::user'
     chef.add_recipe 'git'
@@ -34,21 +35,21 @@ Vagrant.configure("2") do |config|
         :timeout     => "300",
         :loglevel    => "notice"
       },
-      :nginx      => {
-        :dir                => "/etc/nginx",
-        :log_dir            => "/var/log/nginx",
-        :binary             => "/usr/sbin/nginx",
-        :user               => "www-data",
-        :init_style         => "runit",
-        :pid                => "/var/run/nginx.pid",
-        :worker_connections => "1024"
-      },
+      # :nginx      => {
+      #   :dir                => "/etc/nginx",
+      #   :log_dir            => "/var/log/nginx",
+      #   :binary             => "/usr/sbin/nginx",
+      #   :user               => "www-data",
+      #   :init_style         => "runit",
+      #   :pid                => "/var/run/nginx.pid",
+      #   :worker_connections => "1024"
+      # },
       :rbenv      => {
         :user_installs => [
           {
             :user   => "vagrant",
             :rubies => [
-              "2.0.0-p353",
+              # "2.0.0-p353",
               "2.1.1"
             ],
             :global => "2.1.1"
